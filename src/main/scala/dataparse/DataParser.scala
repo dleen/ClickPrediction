@@ -3,16 +3,24 @@ import scala.io.Source
 class DataSet(filename: String) {
 	val url = getClass.getResource("/" + filename)
 
-	println(url)
-
 	val dataIterator = Source.fromURL(url).getLines
 
-	// for(elem <- dataIterator )
+	// for(elem <- dataIterator)
+	// 	parseLine(elem)
 
-	println(dataIterator.next)
+	val temp = dataIterator.next
+
+	println(temp)
+	parseLine(temp).map(println)
+
+	def parseLine(line: String): Array[String] = {
+		val splitOnPipe = line.split('|')
+		
+		splitOnPipe
+	}
 
 }
 
 object HelloWorld extends App {
-	val t = new DataSet("test.txt")
+	val t = new DataSet("train.txt")
 }
