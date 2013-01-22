@@ -2,6 +2,7 @@ package main.scala.dataparse
 
 import scala.io.Source
 
+// Object to store the results of parsing one line
 case class DataLine(clicked: Int,
     depth: Int,
     position: Int,
@@ -10,6 +11,7 @@ case class DataLine(clicked: Int,
     age: Int,
     tokens: Set[Int])
 
+// Object representing one dataset
 case class DataSet(datatype: String) {
     val filename: String = datatype match {
         case "training" => "train.txt"
@@ -17,14 +19,20 @@ case class DataSet(datatype: String) {
         case "test_labels" => "test_labels.txt"
     }
 
+    // Open resource, either training or test data
+    // and create iterator which iterates over each
+    // line and returns a DataLine 
     val url = getClass.getResource("/" + filename)
     val dataFile = Source.fromURL(url)
     val dataIterator = dataFile.getLines.map(parseLine)
 
+    // Parses a string into a DataLine object
     def parseLine(line: String): DataLine = {
         val splitOnPipe = line.split('|')
-        
+        // The first n - 1 elements are not tokens
         val nonToken = splitOnPipe.init.map(_.toInt)
+        // The last element is a token
+        // We parse the token into a set of ints
         val tokens = parseTokens(splitOnPipe.last)
 
         datatype match {
@@ -39,7 +47,6 @@ case class DataSet(datatype: String) {
 
     def parseTokens(tokenString: String): Set[Int] = {
         val splitOnComma = tokenString.split(',').map(_.toInt)
-
         splitOnComma.toSet
     }
 
