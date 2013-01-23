@@ -50,7 +50,7 @@ case class DataSet(datatype: String) {
         splitOnComma.toSet
     }
 
-    def resetDataIterator = {
+    def resetDataIterator: DataSet = {
         if (this.dataIterator.hasNext) this
         else new DataSet(datatype)
     }

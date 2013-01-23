@@ -33,7 +33,6 @@ object WarmUp extends App {
     println(summaryTest)
     println("# Tokens in both data sets: " + commonTokens.size)
     println("# Users in both data sets: " + commonUsers.size) 
-
     // Results:
     // Data set: training, CTR: 0.0336, # Users: 982431, # Tokens: 141063, # Lines: 2335860
     // Data set: test, CTR: -1.0, # Users: 574906, # Tokens: 109459, # Lines: 1016553
@@ -49,7 +48,8 @@ object WarmUp extends App {
         // Loop over the lines in the data
         for (x <- data.dataIterator) {
             // Single pass mean of CTR
-            mean = ((n - 1) * mean + x.clicked) / n
+            // mean = ((n - 1) * mean + x.clicked) / n
+            mean += x.clicked
             n = n + 1
         	if (x.userid != 0) {
                 // Add unique userids to the set
@@ -58,6 +58,7 @@ object WarmUp extends App {
             // Add sets of unique tokens to the token set
 	        tokens ++= x.tokens
         }
+        mean = mean / (n - 1)
         // Close data file
         data.closeData
         // Return the basic analysis
