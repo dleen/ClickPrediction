@@ -33,11 +33,6 @@ object WarmUp extends App {
     println(summaryTest)
     println("# Tokens in both data sets: " + commonTokens.size)
     println("# Users in both data sets: " + commonUsers.size) 
-    // Results:
-    // Data set: training, CTR: 0.0336, # Users: 982431, # Tokens: 141063, # Lines: 2335860
-    // Data set: test, CTR: -1.0, # Users: 574906, # Tokens: 109459, # Lines: 1016553
-    // # Tokens in both data sets: 79261
-    // # Users in both data sets: 56075
 
     def warmUpCalculation(data: DataSet): BasicAnalysis = {
         var mean = 0.0
