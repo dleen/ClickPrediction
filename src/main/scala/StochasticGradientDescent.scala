@@ -1,43 +1,64 @@
+package main.scala.sgd
+
 import main.scala.dataparse._
 
 import scala.annotation.tailrec
+import scala.math._
 
 import breeze.linalg._
 
 object SGD extends App {
-	println("Hello World")
 
     val training = DataSet("training")
-
     val z = training.dataIterator
 
+    val w = SparseVector.zeros[Double](training.maxTokenValue + training.offset + 1)
 
- //    println(z)
+    val eta = 0.05
 
- //    val (y1,y2) = z.featuresArray
+    val averageLoss: List[Double] = List()
 
-	// y2.zip(y1).map(println)
+    recursiveWeightUpdates(z, w)
 
- //    val x = new SparseVector(y2, y1, 141063)
+    @tailrec def recursiveSGD(iter: Iterator[DataLine],
+        weights: SparseVector[Double], averageLoss: List[Double], n: Int): SparseVector[Double] = {
+        if (!iter.hasNext) weights
+        else {
+            val line = iter.next
+            val (features, index) = line.featuresArray
+            val x = new SparseVector(index, features, training.maxTokenValue + training.offset + 1)
 
- //    println(x)
+            val y = line.clicked
+            val yHat = predictLabel(x, weights)
 
-    var w = SparseVector.zeros[Double](141063)
+            val newWeights = updateWeights(y, yHat, x, w)
 
-    recursiveGradient(z, w)
+            if (n % 100 == 0) {
+                val avgLossNew = averageLossFunc(averageLoss, y, yHat, n)
+                val avgLoss = avgLossNew :: averageLoss
+            } else {
+                val avgLoss = averageLoss
+            }
 
-	@tailrec def recursiveWeightUpdates(iter: Iterator[DataLine],
-    	weights: SparseVector[Double]): SparseVector[Double] = {
-    	if (!iter.hasNext) weights
-    	else {
-    		val line = iter.next
-    		val (features, ind) = line.featuresArray
-    		val x = new SparseVector(ind, features, training.tokensLength)
+            recursiveSGD(iter, newWeights, avgLoss) // problem
+        }
+    }
 
-    		val logRegExponent = x.dot(weights) // uhhh maybe not dot product
+    def averageLossFunc(avgLossPrev: Double, actualLabel: Double, 
+        predictedLabel: Double, n:Int): Double = {
+        ((n - 1) * avgLossPrev + pow(actualLabel - predictedLabel, 2)) / n
+    }
 
-    		recursiveWeightUpdates(iter, newWeights) // problem
-    	}
+    def updateWeights(actualLabel: Double, 
+        predictedLabel: Double, x: SparseVector[Double],
+        w: SparseVector[Double]): SparseVector[Double] = {
+        w + x * (actualLabel - predictedLabel) * eta 
+    }
+
+    def predictLabel(x: SparseVector[Double],
+        w: SparseVector[Double]): Double = {
+        val logisticRegressExp = exp(x.dot(w))
+        logisticRegressExp / (1 + logisticRegressExp)
     }
 
 }

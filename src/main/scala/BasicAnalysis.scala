@@ -32,7 +32,10 @@ object WarmUp extends App {
     println(summaryTraining)
     println(summaryTest)
     println("# Tokens in both data sets: " + commonTokens.size)
-    println("# Users in both data sets: " + commonUsers.size) 
+    println("# Users in both data sets: " + commonUsers.size)
+
+    println(summaryTraining.uniqueTokens.max)
+    println(summaryTest.uniqueTokens.max)
 
     def warmUpCalculation(data: DataSet): BasicAnalysis = {
         var mean = 0.0

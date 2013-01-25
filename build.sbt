@@ -20,3 +20,5 @@ resolvers ++= Seq(
             "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
             "Sonatype tools" at "https://oss.sonatype.org/content/groups/scala-tools/"
             )
+
+mainClass in (Compile, run) := Some("main.scala.sgd.SGD")
