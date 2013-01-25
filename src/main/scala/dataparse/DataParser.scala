@@ -9,7 +9,18 @@ case class DataLine(clicked: Int,
     userid: Int,
     gender: Int,
     age: Int,
-    tokens: Set[Int])
+    tokens: Set[Int]) {
+
+    def featuresArray(): (Array[Double], Array[Int]) = {
+        val features = Array(this.depth,
+            this.position,
+            this.gender,
+            this.age) ++ Array.fill(this.tokens.size)(1)
+        val index = Array(0, 1, 2, 3) ++ this.tokens.map(x => x + 4)
+        (features.map(_.toDouble), index)
+    }
+}
+
 
 // Object representing one dataset
 case class DataSet(datatype: String) {
@@ -25,6 +36,11 @@ case class DataSet(datatype: String) {
     val url = getClass.getResource("/" + filename)
     val dataFile = Source.fromURL(url)
     val dataIterator = dataFile.getLines.map(parseLine)
+
+    val tokensLength: Int = datatype match {
+        case "training" => 141063
+        case "test" => 109459
+    }
 
     // Parses a string into a DataLine object
     def parseLine(line: String): DataLine = {
