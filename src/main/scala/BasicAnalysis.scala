@@ -34,9 +34,6 @@ object WarmUp extends App {
     println("# Tokens in both data sets: " + commonTokens.size)
     println("# Users in both data sets: " + commonUsers.size)
 
-    println(summaryTraining.uniqueTokens.max)
-    println(summaryTest.uniqueTokens.max)
-
     def warmUpCalculation(data: DataSet): BasicAnalysis = {
         var mean = 0.0
         var n = 1
@@ -46,7 +43,6 @@ object WarmUp extends App {
         // Loop over the lines in the data
         for (x <- data.dataIterator) {
             // Single pass mean of CTR
-            // mean = ((n - 1) * mean + x.clicked) / n
             mean += x.clicked
             n = n + 1
         	if (x.userid != 0) {
