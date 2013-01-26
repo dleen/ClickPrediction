@@ -2,7 +2,7 @@ name := "ClickPrediction Leen"
 
 version := "1.0"
 
-scalacOptions += "-deprecation"
+scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies  ++= Seq(
             // other dependencies here

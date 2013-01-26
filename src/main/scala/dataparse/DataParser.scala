@@ -13,14 +13,15 @@ case class DataLine(clicked: Int,
 
     // Creates the feature array x which includes the 1 
     // corresponding to w0 i.e. x = (1, x)
-    def featuresArray(): (Array[Double], Array[Int]) = {
-        val features = Array(1, 
+    def featuresArray(): (Array[Int], Array[Int]) = {
+        val features = Array(1, // Corresponds to w0
             this.depth,
             this.position,
             this.gender,
             this.age) ++ Array.fill(this.tokens.size)(1)
-        val index = Array(0, 1, 2, 3, 4) ++ this.tokens.map(x => x + 5)
-        (features.map(_.toDouble), index)
+        val index = Array(0, 1, 2, 3, 4) ++ this.tokens.toArray.map(x => x + 5)
+        // (features.map(_.toDouble), index)
+        (features, index)
     }
 }
 
