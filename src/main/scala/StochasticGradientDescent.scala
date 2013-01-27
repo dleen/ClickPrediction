@@ -72,7 +72,7 @@ class LogisticRegression(data: DataSet, eta: Double) {
     def calculateWeights(): (SparseDoubleMatrix1D, List[Double]) = {
         val avgLossList: List[Double] = List()
         val avgLoss: Double = 0.0
-        val w = new SparseDoubleMatrix1D(maxTokenValue + offset + 1, tokensLength, 0.01, 0.2)
+        val w = new SparseDoubleMatrix1D(maxTokenValue + offset + 1)
 
         @tailrec def recursiveSGD(iter: Iterator[DataLine],
             weights: SparseDoubleMatrix1D,
@@ -91,7 +91,7 @@ class LogisticRegression(data: DataSet, eta: Double) {
                 // The predicted label P(Y=1|X)
                 val yHat: Double = predictLabel(x, weights)
                 // Calculate the new weights using SGD
-                val newWeights = updateWeights(y, yHat, x, weights, eta, line)
+                val newWeights = updateWeights(y, yHat, x, weights, eta)
                 // Calculate the average loss, the square diff between
                 // actual and predicted labels
                 val avgLossNew = avgLossFunc(avgLoss, y, yHat, n)
@@ -100,7 +100,7 @@ class LogisticRegression(data: DataSet, eta: Double) {
                 println(n)
 
                 // Move onto the next line to update the weights
-                recursiveSGD(iter, weights, eta, avgLossNew, avgLossListNew, n + 1)
+                recursiveSGD(iter, newWeights, eta, avgLossNew, avgLossListNew, n + 1)
             }
         }
         recursiveSGD(data.dataIterator, w, eta, avgLoss, avgLossList, 1)
@@ -109,9 +109,8 @@ class LogisticRegression(data: DataSet, eta: Double) {
     // Return the feature vector X from the data in a line
     def featureVector(line: DataLine): SparseDoubleMatrix1D = {
         val (features, index) = line.featuresArray
-        val sfv = new SparseDoubleMatrix1D(maxTokenValue + offset + 1, index.size, 0, 0.01)
+        val sfv = new SparseDoubleMatrix1D(maxTokenValue + offset + 1)
         for (i <- 0 until index.size) sfv.setQuick(index(i), features(i))
-        println(sfv)
         sfv
     }
 
@@ -136,12 +135,8 @@ class LogisticRegression(data: DataSet, eta: Double) {
             yHat: Double,
             x: SparseDoubleMatrix1D,
             w: SparseDoubleMatrix1D,
-            eta: Double,
-            line: DataLine): SparseDoubleMatrix1D = {
+            eta: Double): SparseDoubleMatrix1D = {
         val coeff: Double = (y - yHat) * eta
-        // val (features, index) = line.featuresArray
-        // val ft = features.map(x => coeff * x)
-
         blas.daxpy(coeff, x, w)
         w
     }
