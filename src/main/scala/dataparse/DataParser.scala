@@ -13,13 +13,13 @@ case class DataLine(clicked: Int,
 
     // Creates the feature array x which includes the 1 
     // corresponding to w0 i.e. x = (1, x)
-    def featuresArray(): (Array[Int], Array[Int]) = {
-        val features = Array(1, // Corresponds to w0
-            this.depth,
-            this.position,
-            this.gender,
-            this.age) ++ Array.fill(this.tokens.size)(1)
-        val index = Array(0, 1, 2, 3, 4) ++ this.tokens.toArray.map(x => x + 5)
+    def featuresArray(): (Array[Double], Array[Int]) = {
+        val features = Array(1.0, // Corresponds to w0
+            this.depth.toDouble,
+            this.position.toDouble,
+            this.gender.toDouble,
+            this.age.toDouble) ++ Array.fill(this.tokens.size)(1.0)
+        val index = Array(0, 1, 2, 3, 4) ++ this.tokens.toArray.map(x => x + 5).sorted
         // (features.map(_.toDouble), index)
         (features, index)
     }
@@ -48,6 +48,10 @@ case class DataSet(datatype: String) {
     val maxTokenValue: Int = datatype match {
         case "training" => 1070659
         case "test" => 1070634
+    }
+    val numOfLines: Int = datatype match {
+        case "training" => 2335860
+        case "test" => 1016553
     }
     val offset: Int = 5
 
