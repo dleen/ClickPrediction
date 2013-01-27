@@ -7,13 +7,44 @@ import scala.math._
 
 import breeze.linalg._
 
+import cern.colt.matrix.impl.SparseDoubleMatrix1D
+import cern.colt.matrix.linalg.Blas._
+
 object SGD extends App {
 
     val training = DataSet("training")
     val eta = 0.05
 
-    val LR = new LogisticRegression(training, eta)
-    val (wFin, avgLossListFin) = LR.calculateWeights()
+    val iter = training.dataIterator
+
+    val line: DataLine = iter.next
+
+    println(line)
+
+    val (features, index) = line.featuresArray
+    features.map(println)
+    index.map(println)
+    val sfv = new SparseDoubleMatrix1D(1)
+    for (i <- 0 until index.size) {
+        println(index(i), features(i))
+        sfv.setQuick(index(i), features(i))
+    }
+    println(sfv.getQuick(17010))
+    println(sfv.toString)
+
+    sfv.setQuick(10, 15.0)
+    sfv.setQuick(25, 15.0)
+    sfv.setQuick(24, 15.0)
+
+    println(sfv.getQuick(17010))
+    println(sfv.cardinality)
+
+    val sfw = sfv.copy
+
+    daxpy(1.0, sfw, sfv)
+
+    // val LR = new LogisticRegression(training, eta)
+    // val (wFin, avgLossListFin) = LR.calculateWeights()
 
     // println("The L2 norm: " + l2Norm(wFin))
     // println("The avg loss list: " + avgLossListFin.length)
@@ -30,35 +61,36 @@ object SGD extends App {
 class LogisticRegression(data: DataSet, eta: Double) {
     val offset = data.offset
     val maxTokenValue = data.maxTokenValue
+    val tokensLength = data.tokensLength
     val zz = data.dataIterator
 
-    def calculateWeights(): (SparseVector[Double], List[Double]) = {
+    def calculateWeights(): (SparseDoubleMatrix1D, List[Double]) = {
         val avgLossList: List[Double] = List()
         val avgLoss: Double = 0.0
-        val www = SparseVector.zeros[Double](maxTokenValue + offset + 1)
+        val w = new SparseDoubleMatrix1D(tokensLength + offset + 1)
 
         // @tailrec def recursiveSGD(iter: Iterator[DataLine],
         def recursiveSGD(iter: Iterator[DataLine],
-            weights: SparseVector[Double],
+            weights: SparseDoubleMatrix1D,
             eta: Double,
             avgLoss: Double,
             avgLossList: List[Double],
             n: Int,
             xtokens: Set[Int],
-            wtokens: Set[Int]): (SparseVector[Double], List[Double]) = {
+            wtokens: Set[Int]): (SparseDoubleMatrix1D, List[Double]) = {
             if (!iter.hasNext) (weights, avgLossList)
             else {
                 // A line from the data set
                 val line: DataLine = iter.next
                 // Create the feature vector
-                val xxx: SparseVector[Double] = featureVector(line)
+                val x: SparseDoubleMatrix1D = featureVector(line)
                 // The actual label, clicked or not clicked
                 val y: Int = line.clicked
                 // The predicted label P(Y=1|X)
-                val yHat: Double = predictLabel(xxx, weights)
+                val yHat: Double = predictLabel(x, weights)
                 // Calculate the new weights using SGD
-                val (newWeights, xtkns, wtkns): (SparseVector[Double], Set[Int], Set[Int]) = 
-                    updateWeights(y, yHat, xxx, weights, eta, n, xtokens, wtokens)
+                val (newWeights, xtkns, wtkns) = 
+                    updateWeights(y, yHat, x, weights, eta, n, xtokens, wtokens)
                 // Calculate the average loss, the square diff between
                 // actual and predicted labels
                 val avgLossNew = avgLossFunc(avgLoss, y, yHat, n)
@@ -70,16 +102,18 @@ class LogisticRegression(data: DataSet, eta: Double) {
                 //recursiveSGD(iter, newWeights, eta, avgLossNew, avgLossListNew, n + 1, xtkns, wtkns)
             }
         }
-        val (wnew,avg) = recursiveSGD(zz, www, eta, avgLoss, avgLossList, 1, Set(), Set())
+        val (wnew,avg) = recursiveSGD(zz, w, eta, avgLoss, avgLossList, 1, Set(), Set())
         val (wnew1,avg1) = recursiveSGD(zz, wnew, eta, avgLoss, avgLossList, 1, Set(), Set())
         val (wnew2,avg2) = recursiveSGD(zz, wnew1, eta, avgLoss, avgLossList, 1, Set(), Set())
         recursiveSGD(zz, wnew2, eta, avgLoss, avgLossList, 1, Set(), Set())
     }
 
     // Return the feature vector X from the data in a line
-    def featureVector(line: DataLine): SparseVector[Double] = {
+    def featureVector(line: DataLine): SparseDoubleMatrix1D = {
         val (features, index) = line.featuresArray
-        new SparseVector(index, features.map(_.toDouble), index.size, maxTokenValue + offset + 1) 
+        val sfv = new SparseDoubleMatrix1D(index.size)
+        for (i <- 0 until index.size) sfv.setQuick(index(i), features(i))
+        sfv
     }
 
     // Return the average loss
@@ -101,49 +135,36 @@ class LogisticRegression(data: DataSet, eta: Double) {
     // Update the weight vector 
     def updateWeights(y: Double, 
             yHat: Double,
-            x: SparseVector[Double],
-            w: SparseVector[Double],
+            x: SparseDoubleMatrix1D,
+            w: SparseDoubleMatrix1D,
             eta: Double,
             n: Int,
             xtokens: Set[Int],
-            wtokens: Set[Int]): (SparseVector[Double], Set[Int], Set[Int]) = {
-        val coeff: Double = (y - yHat) * eta
-        val xNew: SparseVector[Double] = x * coeff
-        println(coeff)
-        println(x)
-        println(xNew)
-        for (j <- xNew.index.sorted) {
-            println(j, xNew(j))
-        }
-        // x.index.map(println)
-        // println
-        // w.index.sorted.map(println)
-        // println
-        println("MULTIPLICATION")
-        val wNew: SparseVector[Double] = xNew + w
-        println(xNew)
-        println(w)
-        println(wNew)
+            wtokens: Set[Int]): (SparseDoubleMatrix1D, Set[Int], Set[Int]) = {
+        // val coeff: Double = (y - yHat) * eta
+        // val xNew: SparseDoubleMatrix1D = x * coeff
 
-        val xtkns = xtokens ++ w.index.toSet
-        val wtkns = wtokens ++ wNew.index.toSet
+        // // x.index.map(println)
+        // // println
+        // // w.index.sorted.map(println)
+        // // println
+        // val wNew: SparseDoubleMatrix1D = xNew + w
+        // println(xNew)
+        // println(w)
+        // println(wNew)
 
-        // println(xNew.data.size, w.data.size, n, tkns.size)
-        println(wNew.index.size, wNew.index.toSet.size, n, xtkns.size, wtkns.size)
-        val wnewsorted = wNew.index.sorted
-        for (i <- 0 until wNew.index.length) {
-            println(wnewsorted(i), wNew(wnewsorted(i)).toString.take(5))
-        }
+        // val xtkns = xtokens ++ w.index.toSet
+        // val wtkns = wtokens ++ wNew.index.toSet
 
-        // println(t(0))
-        // (xNew + w, tkns)
-        (wNew, xtkns, wtkns)
+
+
+        (w, xtokens, wtokens)
     }
 
     // Make a prediction for the label
-    def predictLabel(x: SparseVector[Double],
-            w: SparseVector[Double]): Double = {
-        val logisticRegressExp = exp(w.dot(x))
+    def predictLabel(x: SparseDoubleMatrix1D,
+            w: SparseDoubleMatrix1D): Double = {
+        val logisticRegressExp: Double = exp(w.zDotProduct(x))
         logisticRegressExp / (1 + logisticRegressExp)
     }
 }
