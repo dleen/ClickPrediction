@@ -10,7 +10,7 @@ import breeze.linalg._
 object SGD extends App {
 
     val training = DataSet("training")
-    val eta = 0.05
+    val eta = 0.001
 
     val LR = new LogisticRegression(training, eta)
 
@@ -23,9 +23,7 @@ object SGD extends App {
 
     training.closeData
 
-    def l2Norm(w: SparseVector[Double]): Double = {
-        w.norm(2)
-    }    
+    def l2Norm(w: SparseVector[Double]): Double = w.norm(2)
 }
 
 class LogisticRegression(data: DataSet, eta: Double) {
@@ -33,7 +31,6 @@ class LogisticRegression(data: DataSet, eta: Double) {
     val maxTokenValue = data.maxTokenValue
 
     val (weightsFinal, avgLossListFinal) = calculateWeights()
-    println("All done")
 
     def calculateWeights(): (SparseVector[Double], List[Double]) = {
     	println("Calculating the weights: ")
