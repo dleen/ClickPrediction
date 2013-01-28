@@ -2,6 +2,7 @@ package main.scala.sgd
 
 import main.scala.dataparse._
 
+import scala.collection._
 import scala.annotation.tailrec
 import scala.math.{exp, sqrt, pow}
 
@@ -79,9 +80,66 @@ class LogisticRegression(data: DataSet, eta: Double) {
         new SparseVector(index, features, index.size, maxTokenValue + offset + 1) 
     }
 
+    def calcAccessTimes(line: DataLine, n: Int): SparseVector[Int] = {
+        val (_, index) = line.featuresArray
+        val features = Array.fill(index.size)(n)
+        new SparseVector(index, features, index.size, maxTokenValue + offset + 1)
+    }
+
+    // Update the weight vector 
+    def updateWeights(y: Double, yHat: Double,
+            x: SparseVector[Double],
+            w: SparseVector[Double],
+            eta: Double): SparseVector[Double] = {
+        val coeff: Double = (y - yHat) * eta
+        x *= coeff
+        w += x
+        w
+    }
+
+    // Update the weight vector 
+    def updateWeightsHashMap(y: Double, yHat: Double,
+            line: DataLine,
+            w: mutable.HashMap[Int, Double],
+            eta: Double): mutable.HashMap[Int, Double] = {
+        val coeff: Double = (y - yHat) * eta
+        val (features, index) = line.featuresArray
+
+        val fzip = index zip features
+        val map = mutable.HashMap.empty[Int, Double]
+
+        for (p <- fzip) map += p
+        map
+    }
+
+    // Update the weight vector with regularization
+    def updateRegularizedWeights(y: Double, yHat: Double,
+            x: SparseVector[Double],
+            w: SparseVector[Double],
+            accessTimes: SparseVector[Int],
+            eta: Double,
+            n: Int): SparseVector[Double] = {
+        val coeff: Double = (y - yHat) * eta
+        // val xNew: SparseVector[Double] = x * coeff
+        x *= coeff
+        w += x
+        w
+    }
+
+    // Make a prediction for the label
+    def predictLabel(x: SparseVector[Double],
+            w: SparseVector[Double]): Double = {
+        val ewx = exp(w.dot(x))
+        ewx / (1 + ewx)
+    }
+
     // Return the average loss
     def avgLossFunc(avgLossPrev: Double, y: Double, 
-            yHat: Double, n:Int): Double = {
+            pyx: Double, n:Int): Double = {
+    	val yHat = {
+    		if (pyx >= 0.5) 1
+    		else 0
+    	}
         ((n - 1) * avgLossPrev + pow(y - yHat, 2)) / n
     }
 
@@ -96,24 +154,5 @@ class LogisticRegression(data: DataSet, eta: Double) {
         	avgLoss :: avgLossList
         }
         else avgLossList
-    }
-
-    // Update the weight vector 
-    def updateWeights(y: Double, yHat: Double,
-            x: SparseVector[Double],
-            w: SparseVector[Double],
-            eta: Double): SparseVector[Double] = {
-        val coeff: Double = (y - yHat) * eta
-        // val xNew: SparseVector[Double] = x * coeff
-        x *= coeff
-        w += x
-        w
-    }
-
-    // Make a prediction for the label
-    def predictLabel(x: SparseVector[Double],
-            w: SparseVector[Double]): Double = {
-        val ewx = exp(w.dot(x))
-        ewx / (1 + ewx)
     }
 }
