@@ -11,3 +11,30 @@ Data set: training, CTR: 0.0336, # Users: 982431, # Tokens: 141063, # Lines: 233
 Data set: test, CTR: -1.0, # Users: 574906, # Tokens: 109459, # Lines: 1016553
 # Tokens in both data sets: 79261
 # Users in both data sets: 56075
+
+
+For eta = 0.05:
+The L2 norm: 22.319454269444947
+Max of weights: 1.3005589376358575
+The avg loss list: 23358
+The avg loss first: 0.03067211584838938
+The avg loss 10,000: 0.034097733141831656
+The avg loss last: 0.07726095302953273
+
+
+For eta = 0.01:
+The L2 norm: 9.06096382886352
+Max of weights: 0.6414076660913242
+The avg loss list: 23358
+The avg loss first: 0.029931839140278395
+The avg loss 10,000: 0.032851001344471664
+The avg loss last: 0.09015515267132368
+
+
+For eta = 0.001:
+The L2 norm: 3.791012552783549
+Max of weights: 0.30552697221057923
+The avg loss list: 23358
+The avg loss first: 0.031123645144042283
+The avg loss 10,000: 0.03390203545503471
+The avg loss last: 0.18265974852361405
