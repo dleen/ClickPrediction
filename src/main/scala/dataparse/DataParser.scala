@@ -88,3 +88,9 @@ case class DataSet(datatype: String) {
         dataFile.close
     }
 }
+
+case object TestLabels {
+    val url = getClass.getResource("/" + "test_labels.txt")
+    val dataFile = Source.fromURL(url)
+    val label = dataFile.getLines.map(_.toDouble)
+}
