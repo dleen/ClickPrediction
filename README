@@ -7,7 +7,7 @@ Netid: dleen
 Language: Scala
 
 Results:
-Data set: training, CTR: 0.0336, # Users: 982431, # Tokens: 141063, # Lines: 2335860
+Data set: training, CTR: 0.03365528, # Users: 982431, # Tokens: 141063, # Lines: 2335860
 Data set: test, CTR: -1.0, # Users: 574906, # Tokens: 109459, # Lines: 1016553
 # Tokens in both data sets: 79261
 # Users in both data sets: 56075
@@ -42,3 +42,14 @@ The avg loss last: 0.18265974852361405
 
 Delayed Regularization
 ----------------------
+For eta = 0.05
+and lambda = 0.0005:
+The L2 norm: 4.6468716201394304
+Max of weights: 0.445061464669563
+The avg loss list: 23358
+The avg loss first: 0.031919684904526305
+The avg loss 10,000: 0.0354214702799799
+The avg loss last: 0.09
+Starting test:
+RMSE: 0.17286476243357055
+RMSE baseline: 0.173083735870231

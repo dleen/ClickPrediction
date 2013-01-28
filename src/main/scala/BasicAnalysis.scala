@@ -14,7 +14,7 @@ case class BasicAnalysis(datatype: String,
     }
 
     override def toString = "Data set: " + datatype + ", CTR: " + 
-        meanCTR.toString.take(6) + ", # Users: " + uniqueUsers.size + 
+        meanCTR.toString.take(10) + ", # Users: " + uniqueUsers.size + 
         ", # Tokens: " + uniqueTokens.size + ", # Lines: " + n
 }
 

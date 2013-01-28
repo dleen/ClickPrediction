@@ -31,7 +31,6 @@ case class DataSet(datatype: String) {
     val filename: String = datatype match {
         case "training" => "train.txt"
         case "test" => "test.txt"
-        case "test_labels" => "test_labels.txt"
     }
 
     // Open resource, either training or test data
@@ -90,7 +89,7 @@ case class DataSet(datatype: String) {
 }
 
 case object TestLabels {
-    val url = getClass.getResource("/" + "test_labels.txt")
+    val url = getClass.getResource("/" + "test_label.txt")
     val dataFile = Source.fromURL(url)
     val label = dataFile.getLines.map(_.toDouble)
 }
