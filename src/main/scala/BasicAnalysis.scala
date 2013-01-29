@@ -12,7 +12,6 @@ case class BasicAnalysis(datatype: String,
         val commonUsers = this.uniqueUsers.intersect(that.uniqueUsers)
         (commonTokens, commonUsers)
     }
-
     override def toString = "Data set: " + datatype + ", CTR: " + 
         meanCTR.toString.take(10) + ", # Users: " + uniqueUsers.size + 
         ", # Tokens: " + uniqueTokens.size + ", # Lines: " + n
@@ -28,12 +27,10 @@ object WarmUp extends App {
     // Calculate common elements in the training and test
     // users and tokens sets
     val (commonTokens, commonUsers) = summaryTraining.intersect(summaryTest)
-
     println(summaryTraining)
     println(summaryTest)
     println("# Tokens in both data sets: " + commonTokens.size)
     println("# Users in both data sets: " + commonUsers.size)
-
     def warmUpCalculation(data: DataSet): BasicAnalysis = {
         var mean = 0.0
         var n = 1

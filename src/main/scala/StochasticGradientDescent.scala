@@ -9,7 +9,6 @@ import scalax.io._
 import scalax.io.Resource
 
 
-
 object SGD extends App {
 
     val training = DataSet("training")
@@ -22,11 +21,7 @@ object SGD extends App {
     println("")
     println("Using eta = " + eta)
     println("Using lambda = " + lambda)
-    println("The L2 norm: "         + l2Norm(weightsFinal))
-    println("Max of weights: "      + weightsFinal.max)
-    println("The avg loss first: "  + avgLossListFinal.head)
-    println("The avg loss last: "   + avgLossListFinal.last)
-
+    println("The L2 norm: " + l2Norm(weightsFinal))
     println("Position = " + weightsFinal(2))
     println("Depth = " + weightsFinal(1))
     println("Gender = " + weightsFinal(3))
@@ -38,10 +33,10 @@ object SGD extends App {
     val test = DataSet("test")
 
     val LRt = new LogisticRegression(test, eta, lambda)
-    val (rmse1, rmse2) = LRt.predictCTR(weightsFinal)
+    val (rmse, rmsebaseline) = LRt.predictCTR(weightsFinal)
 
-    println("RMSE: " + rmse1)
-    println("RMSE baseline: " + rmse2)
+    println("RMSE: " + rmse)
+    println("RMSE baseline: " + rmsebaseline)
 
     training.closeData
     test.closeData
@@ -67,6 +62,7 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
     val offset = data.offset
     val maxTokenValue = 1070659
 
+    // Calculate the weights from the training data
     def calculateWeights(): (SparseVector[Double], List[Double]) = {
     	println("Calculating the weights: ")
         val avgLossList: List[Double] = List()
@@ -129,6 +125,7 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
         recursiveSGD(data.dataIterator, w, aTimes, avgLoss, avgLossList, 1)
     }
 
+    // Predict the labels of the test data using learned weights
     def predictCTR(weights: SparseVector[Double]): (Double, Double) = {
         val rmse = 0.0
         val rmseBaseLine = 0.0
@@ -171,11 +168,37 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
             1, rmse, rmseBaseLine)
     }
 
+    /*
+    * Stochastic Gradient Descent Functions
+    */
+
     // Return the feature vector X from the data in a line
     def featureVector(line: DataLine): SparseVector[Double] = {
         val (features, index) = line.featuresArray
         new SparseVector(index, features, index.size, maxTokenValue + offset + 1) 
     }
+
+    // Update the weight vector 
+    def updateWeights(y: Double, yHat: Double,
+            x: SparseVector[Double],
+            w: SparseVector[Double],
+            eta: Double): SparseVector[Double] = {
+        val grad: Double = (y - yHat) * eta // gradient
+        x *= grad // multiply features by the gradient
+        w += x // add to the weights
+    }
+
+    // Make a prediction for the label
+    def predictLabel(x: SparseVector[Double],
+            w: SparseVector[Double]): Double = {
+        val ewx = exp(w.dot(x)) // exponential
+        ewx / (1 + ewx) // logistic regression function
+    }
+
+
+    /*
+    * Delayed Regularization Functions
+    */
 
     // Record when feature first appears
     def calcAccessTimes(line: DataLine,
@@ -222,22 +245,9 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
         (w, accessTimes)
     }
 
-    // Update the weight vector 
-    def updateWeights(y: Double, yHat: Double,
-            x: SparseVector[Double],
-            w: SparseVector[Double],
-            eta: Double): SparseVector[Double] = {
-        val grad: Double = (y - yHat) * eta // gradient
-        x *= grad // multiply features by the gradient
-        w += x // add to the weights
-    }
-
-    // Make a prediction for the label
-    def predictLabel(x: SparseVector[Double],
-            w: SparseVector[Double]): Double = {
-        val ewx = exp(w.dot(x)) // exponential
-        ewx / (1 + ewx) // logistic regression function
-    }
+    /*
+    * Average Loss Functions
+    */
 
     // Return the average loss
     def avgLossFunc(avgLossPrev: Double, y: Double, 
