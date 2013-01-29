@@ -99,10 +99,7 @@ Using lambda = 0.0
 ------------------
 The L2 norm: 22.319454269444947
 Max of weights: 1.3005589376358575
-The avg loss list: 23358
 The avg loss first: 0.09
-The avg loss 10,000: 0.04313868613138568
-The avg loss second last: 0.03253671276276409
 The avg loss last: 0.03253574792361846
 Position = -0.7380131244626671
 Depth = 0.19691524861461618
@@ -114,32 +111,11 @@ RMSE baseline: 0.173083735870231
 
 
 Using eta = 0.05
-and lambda = 0.0002:
---------------------
-The L2 norm: 7.852874369272675
-Max of weights: 0.5611755046125766
-The avg loss list: 23358
-The avg loss first: 0.09
-The avg loss 10,000: 0.042649735026498645
-The avg loss second last: 0.032185212141969025
-The avg loss last: 0.03218426235122747
-Position = -0.7259066631112242
-Depth = 0.24053058501108712
-Gender = 0.04906256715598602
-Age = -0.02883761947749521
-Starting test: 
-RMSE: 0.1731092708556465
-RMSE baseline: 0.173083735870231
-
-Using eta = 0.05
 Using lambda = 0.002
 --------------------
 The L2 norm: 5.20647434383823
 Max of weights: 0.35863498633415924
-The avg loss list: 23358
 The avg loss first: 0.09
-The avg loss 10,000: 0.041975802419758505
-The avg loss second last: 0.03177548486534845
 The avg loss last: 0.03177455261580377
 Position = -0.5361695489096437
 Depth = 0.18369828187392043
@@ -151,51 +127,102 @@ RMSE baseline: 0.173083735870231
 
 
 Using eta = 0.05
-and lambda = 0.0006:
+Using lambda = 0.004
 --------------------
-The L2 norm: 6.202771973184944
-Max of weights: 0.4951127071792278
+The L2 norm: 4.913814588733763
+Max of weights: 0.2672365726599386
 The avg loss list: 23358
 The avg loss first: 0.09
-The avg loss 10,000: 0.04235176482351572
-The avg loss second last: 0.03200068501947439
-The avg loss last: 0.03199974312868668
-Position = -0.6719512098220475
-Depth = 0.2336965681421612
-Gender = 0.05537284220522099
-Age = -0.018422712561706987
-Starting test: 
-RMSE: 0.172937379750931
-RMSE baseline: 0.173083735870231
-
-The L2 norm: 6.202894078830078
-Max of weights: 0.49512443011045987
-The avg loss list: 23358
-The avg loss first: 0.09
-The avg loss 10,000: 0.04235176482351572
-The avg loss second last: 0.03200068501947439
-The avg loss last: 0.03199974312868668
-Position = -0.6719534852411813
-Depth = 0.23369866807511586
-Gender = 0.05537527018138291
-Age = -0.018426365046511305
-Starting test: 
-RMSE: 0.17293747011880176
-RMSE baseline: 0.173083735870231
-
-The L2 norm: 6.202894078830078
-Max of weights: 0.49512443011045987
-The avg loss list: 23358
-The avg loss first: 0.09
-The avg loss 10,000: 0.04235176482351572
-The avg loss second last: 0.03200068501947439
-The avg loss last: 0.03199974312868668
-Position = -0.6719534852411813
-Depth = 0.23369866807511586
-Gender = 0.05537527018138291
-Age = -0.018426365046511305
-Starting test: 
-RMSE: 0.17293747011880176
+The avg loss 10,000: 0.041781821817818886
+The avg loss second last: 0.03165432204477941
+The avg loss last: 0.03165339498244338
+Position = -0.42238869528493467
+Depth = 0.12996962691272734
+Gender = 0.0916398200058198
+Age = 0.001212451997381167
+Starting test:
+RMSE: 0.17277095177139887
 RMSE baseline: 0.173083735870231
 
 
+Using eta = 0.05
+Using lambda = 0.006
+--------------------
+The L2 norm: 4.810060039796109
+Max of weights: 0.23318827040886164
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.041728827117288946
+The avg loss second last: 0.03161279273878952
+The avg loss last: 0.031611867454401366
+Position = -0.3494962824174937
+Depth = 0.09562570230702339
+Gender = 0.09614819089341985
+Age = 0.0064774233914024724
+Starting test:
+RMSE: 0.1727846069254829
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+Using lambda = 0.008
+--------------------
+The L2 norm: 4.75942832868592
+Max of weights: 0.21514866657716328
+The avg loss first: 0.09
+The avg loss last: 0.03157975854096748
+Position = -0.29696457281938016
+Depth = 0.07248979299639562
+Gender = 0.09658174485766657
+Age = 0.01051638513204468
+Starting test:
+RMSE: 0.17280541432751717
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+Using lambda = 0.010
+--------------------
+The L2 norm: 4.7312938130942195
+Max of weights: 0.20032692326891793
+The avg loss first: 0.09
+The avg loss last: 0.03155578388560307
+Position = -0.25665373428620036
+Depth = 0.056032282005942964
+Gender = 0.0952016627493963
+Age = 0.013858300136719508
+Starting test:
+RMSE: 0.17282746515285405
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+Using lambda = 0.012
+--------------------
+The L2 norm: 4.7147205323151775
+Max of weights: 0.1878989061074842
+The avg loss first: 0.09
+The avg loss last: 0.03153566229985173
+Position = -0.22451280385313294
+Depth = 0.04381014294979149
+Gender = 0.09298985080366286
+Age = 0.016735233339522683
+Starting test:
+RMSE: 0.1728486797528293
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+Using lambda = 0.014
+--------------------
+The L2 norm: 4.7047824357682915
+Max of weights: 0.17724914498943062
+The avg loss first: 0.09
+The avg loss last: 0.031516825070635635
+Position = -0.1982096284515043
+Depth = 0.03442843124964286
+Gender = 0.0904199899698999
+Age = 0.019275250455455778
+Starting test:
+RMSE: 0.17286844967719323
+RMSE baseline: 0.173083735870231

@@ -23,6 +23,10 @@ case class DataLine(clicked: Int,
             this.tokens.toArray.map(x => x + 5).sorted
         (features, index)
     }
+
+    def featuresString(): List[String] = {
+        tokens.map(_.toString).toList
+    }
 }
 
 

@@ -1,6 +1,5 @@
 package main.scala.sgd
 
-import scala.collection._
 import scala.annotation.tailrec
 import scala.math.{exp, sqrt, pow}
 
@@ -15,7 +14,7 @@ object SGD extends App {
 
     val training = DataSet("training")
     val eta = 0.05
-    val lambda = 0.002
+    val lambda = 0.014
 
     val LR = new LogisticRegression(training, eta, lambda)
     val (weightsFinal, avgLossListFinal) = LR.calculateWeights()
@@ -25,10 +24,7 @@ object SGD extends App {
     println("Using lambda = " + lambda)
     println("The L2 norm: "         + l2Norm(weightsFinal))
     println("Max of weights: "      + weightsFinal.max)
-    println("The avg loss list: "   + avgLossListFinal.length)
     println("The avg loss first: "  + avgLossListFinal.head)
-    println("The avg loss 10,000: " + avgLossListFinal(10000))
-    println("The avg loss second last: "   + avgLossListFinal(23356))
     println("The avg loss last: "   + avgLossListFinal.last)
 
     println("Position = " + weightsFinal(2))
