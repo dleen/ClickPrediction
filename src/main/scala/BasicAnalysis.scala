@@ -1,4 +1,4 @@
-import main.scala.dataparse._
+package main.scala.sgd
 // Stores the results of the warm up basic analysis
 case class BasicAnalysis(datatype: String,
 	meanCTR: Double,

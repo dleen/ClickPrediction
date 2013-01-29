@@ -12,68 +12,69 @@ Data set: test, CTR: -1.0, # Users: 574906, # Tokens: 109459, # Lines: 1016553
 # Tokens in both data sets: 79261
 # Users in both data sets: 56075
 
-No Regularization
------------------
-For eta = 0.05:
+
+Problem 2(b)
+------------
+------------
+Using eta = 0.05
+Using lambda = 0.0:
+------------------
 The L2 norm: 22.319454269444947
 Max of weights: 1.3005589376358575
 The avg loss list: 23358
-The avg loss first: 0.03067211584838938
-The avg loss 10,000: 0.034097733141831656
-The avg loss last: 0.07726095302953273
+The avg loss first: 0.09
+The avg loss 10,000: 0.04313868613138568
+The avg loss second last: 0.03253671276276409
+The avg loss last: 0.03253574792361846
+Position = -0.7380131244626671
+Depth = 0.19691524861461618
+Gender = 0.03966253671268111
+Age = -0.04482220602654853
+Starting test:
+RMSE: 0.17334843748770765
+RMSE baseline: 0.173083735870231
 
-
-For eta = 0.01:
+Using eta = 0.01
+----------------
 The L2 norm: 9.06096382886352
 Max of weights: 0.6414076660913242
 The avg loss list: 23358
-The avg loss first: 0.029931839140278395
-The avg loss 10,000: 0.032851001344471664
-The avg loss last: 0.09015515267132368
+The avg loss first: 0.07999999999999999
+The avg loss 10,000: 0.04098190180981878
+The avg loss second last: 0.031903497880718064
+The avg loss last: 0.03190256015069491
+Position = -0.7790309356099927
+Depth = 0.17431290273465733
+Gender = 0.017395068859689517
+Age = -0.03619530131329406
+Starting test:
+RMSE: 0.17126431815501036
+RMSE baseline: 0.173083735870231
 
-
-For eta = 0.001:
+Using eta = 0.001
+-----------------
 The L2 norm: 3.791012552783549
 Max of weights: 0.30552697221057923
 The avg loss list: 23358
-The avg loss first: 0.031123645144042283
-The avg loss 10,000: 0.03390203545503471
-The avg loss last: 0.18265974852361405
-
-Delayed Regularization
-----------------------
-Done with other standard regularization:
-For eta = 0.05
-and lambda = 0.0005:
-The L2 norm: 4.6468716201394304
-Max of weights: 0.445061464669563
-The avg loss list: 23358
-The avg loss first: 0.031919684904526305
-The avg loss 10,000: 0.0354214702799799
-The avg loss last: 0.09
+The avg loss first: 0.07999999999999999
+The avg loss 10,000: 0.04125487451254768
+The avg loss second last: 0.03306931540864995
+The avg loss last: 0.033068327767781326
+Position = -0.7258889578218943
+Depth = 0.19382966652972416
+Gender = -0.013189200564189384
+Age = 0.013170909717118264
 Starting test:
-RMSE: 0.17286476243357055
-RMSE baseline: 0.173083735870231
-
-Done with only current tokens standard regularization:
-For eta = 0.05
-and lambda = 0.0005:
-The L2 norm: 6.427425925294978
-Max of weights: 0.5105894375230612
-The avg loss list: 23358
-The avg loss first: 0.032033564517508176
-The avg loss 10,000: 0.035559215451415015
-The avg loss second last: 0.075
-The avg loss last: 0.09
-Starting test: 
-RMSE: 0.1729818606371286
+RMSE: 0.17118520869821077
 RMSE baseline: 0.173083735870231
 
 
 Problem 2(c)
 ------------
+------------
 Using eta = 0.01
 and lambda = 0.0:
+-----------------
 The L2 norm: 9.06096382886352
 Max of weights: 0.6414076660913242
 The avg loss list: 23358
@@ -94,8 +95,8 @@ Problem 3(a)
 ------------
 ------------
 Using eta = 0.05
-and lambda = 0.0:
------------------
+Using lambda = 0.0
+------------------
 The L2 norm: 22.319454269444947
 Max of weights: 1.3005589376358575
 The avg loss list: 23358
@@ -107,7 +108,7 @@ Position = -0.7380131244626671
 Depth = 0.19691524861461618
 Gender = 0.03966253671268111
 Age = -0.04482220602654853
-Starting test: 
+Starting test:
 RMSE: 0.17334843748770765
 RMSE baseline: 0.173083735870231
 
@@ -128,6 +129,24 @@ Gender = 0.04906256715598602
 Age = -0.02883761947749521
 Starting test: 
 RMSE: 0.1731092708556465
+RMSE baseline: 0.173083735870231
+
+Using eta = 0.05
+Using lambda = 0.002
+--------------------
+The L2 norm: 5.20647434383823
+Max of weights: 0.35863498633415924
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.041975802419758505
+The avg loss second last: 0.03177548486534845
+The avg loss last: 0.03177455261580377
+Position = -0.5361695489096437
+Depth = 0.18369828187392043
+Gender = 0.0772963687441097
+Age = -0.006726311912203232
+Starting test:
+RMSE: 0.17278782374238363
 RMSE baseline: 0.173083735870231
 
 

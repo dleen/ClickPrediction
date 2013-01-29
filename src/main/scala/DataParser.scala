@@ -1,4 +1,4 @@
-package main.scala.dataparse
+package main.scala.sgd
 
 import scala.io.Source
 
@@ -19,8 +19,8 @@ case class DataLine(clicked: Int,
             this.position.toDouble,
             this.gender.toDouble,
             this.age.toDouble) ++ Array.fill(this.tokens.size)(1.0)
-        val index = Array(0, 1, 2, 3, 4) ++ this.tokens.toArray.map(x => x + 5).sorted
-        // (features.map(_.toDouble), index)
+        val index = Array(0, 1, 2, 3, 4) ++
+            this.tokens.toArray.map(x => x + 5).sorted
         (features, index)
     }
 }
@@ -92,4 +92,8 @@ case object TestLabels {
     val url = getClass.getResource("/" + "test_label.txt")
     val dataFile = Source.fromURL(url)
     val label = dataFile.getLines.map(_.toDouble)
+
+    def closeData = {
+        dataFile.close
+    }
 }
