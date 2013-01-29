@@ -42,6 +42,7 @@ The avg loss last: 0.18265974852361405
 
 Delayed Regularization
 ----------------------
+Done with other standard regularization:
 For eta = 0.05
 and lambda = 0.0005:
 The L2 norm: 4.6468716201394304
@@ -53,3 +54,129 @@ The avg loss last: 0.09
 Starting test:
 RMSE: 0.17286476243357055
 RMSE baseline: 0.173083735870231
+
+Done with only current tokens standard regularization:
+For eta = 0.05
+and lambda = 0.0005:
+The L2 norm: 6.427425925294978
+Max of weights: 0.5105894375230612
+The avg loss list: 23358
+The avg loss first: 0.032033564517508176
+The avg loss 10,000: 0.035559215451415015
+The avg loss second last: 0.075
+The avg loss last: 0.09
+Starting test: 
+RMSE: 0.1729818606371286
+RMSE baseline: 0.173083735870231
+
+
+Problem 2(c)
+------------
+Using eta = 0.01
+and lambda = 0.0:
+The L2 norm: 9.06096382886352
+Max of weights: 0.6414076660913242
+The avg loss list: 23358
+The avg loss first: 0.07999999999999999
+The avg loss 10,000: 0.04098190180981878
+The avg loss second last: 0.031903497880718064
+The avg loss last: 0.03190256015069491
+Position = -0.7790309356099927
+Depth = 0.17431290273465733
+Gender = 0.017395068859689517
+Age = -0.03619530131329406
+Starting test: 
+RMSE: 0.17126431815501036
+RMSE baseline: 0.173083735870231
+
+
+Problem 3(a)
+------------
+------------
+Using eta = 0.05
+and lambda = 0.0:
+-----------------
+The L2 norm: 22.319454269444947
+Max of weights: 1.3005589376358575
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.04313868613138568
+The avg loss second last: 0.03253671276276409
+The avg loss last: 0.03253574792361846
+Position = -0.7380131244626671
+Depth = 0.19691524861461618
+Gender = 0.03966253671268111
+Age = -0.04482220602654853
+Starting test: 
+RMSE: 0.17334843748770765
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+and lambda = 0.0002:
+--------------------
+The L2 norm: 7.852874369272675
+Max of weights: 0.5611755046125766
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.042649735026498645
+The avg loss second last: 0.032185212141969025
+The avg loss last: 0.03218426235122747
+Position = -0.7259066631112242
+Depth = 0.24053058501108712
+Gender = 0.04906256715598602
+Age = -0.02883761947749521
+Starting test: 
+RMSE: 0.1731092708556465
+RMSE baseline: 0.173083735870231
+
+
+Using eta = 0.05
+and lambda = 0.0006:
+--------------------
+The L2 norm: 6.202771973184944
+Max of weights: 0.4951127071792278
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.04235176482351572
+The avg loss second last: 0.03200068501947439
+The avg loss last: 0.03199974312868668
+Position = -0.6719512098220475
+Depth = 0.2336965681421612
+Gender = 0.05537284220522099
+Age = -0.018422712561706987
+Starting test: 
+RMSE: 0.172937379750931
+RMSE baseline: 0.173083735870231
+
+The L2 norm: 6.202894078830078
+Max of weights: 0.49512443011045987
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.04235176482351572
+The avg loss second last: 0.03200068501947439
+The avg loss last: 0.03199974312868668
+Position = -0.6719534852411813
+Depth = 0.23369866807511586
+Gender = 0.05537527018138291
+Age = -0.018426365046511305
+Starting test: 
+RMSE: 0.17293747011880176
+RMSE baseline: 0.173083735870231
+
+The L2 norm: 6.202894078830078
+Max of weights: 0.49512443011045987
+The avg loss list: 23358
+The avg loss first: 0.09
+The avg loss 10,000: 0.04235176482351572
+The avg loss second last: 0.03200068501947439
+The avg loss last: 0.03199974312868668
+Position = -0.6719534852411813
+Depth = 0.23369866807511586
+Gender = 0.05537527018138291
+Age = -0.018426365046511305
+Starting test: 
+RMSE: 0.17293747011880176
+RMSE baseline: 0.173083735870231
+
+

@@ -12,18 +12,24 @@ object SGD extends App {
 
     val training = DataSet("training")
     val eta = 0.05
-    val lambda = 0.0005
+    val lambda = 0.000
 
     val LR = new LogisticRegression(training, eta, lambda)
     val (weightsFinal, avgLossListFinal) = LR.calculateWeights()
 
+    println("")
     println("The L2 norm: "         + l2Norm(weightsFinal))
     println("Max of weights: "      + weightsFinal.max)
     println("The avg loss list: "   + avgLossListFinal.length)
     println("The avg loss first: "  + avgLossListFinal.head)
     println("The avg loss 10,000: " + avgLossListFinal(10000))
+    println("The avg loss second last: "   + avgLossListFinal(23356))
     println("The avg loss last: "   + avgLossListFinal.last)
 
+    println("Position = " + weightsFinal(2))
+    println("Depth = " + weightsFinal(1))
+    println("Gender = " + weightsFinal(3))
+    println("Age = " + weightsFinal(4))
 
     println("Starting test: ")
     val test = DataSet("test")
@@ -62,14 +68,25 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
             rmseBaseLine: Double): (Double, Double) = {
             if (!test.hasNext && !labels.hasNext) (sqrt(rmse / (n - 1)), sqrt(rmseBaseLine / (n - 1)))
             else {
+                // A line from the test data set
+                // Make sure to exclude userid = 0 or age = 0 or gender = 0
                 val line = test.next
+
+                // The actual click through rate
                 val ctr = labels.next
+
+                // The test features
                 val x: SparseVector[Double] = featureVector(line)
+
+                // The predicted label, it's a double not binary
                 val yHat: Double = predictLabel(x, weights)
 
-                val newrmse = rmse + pow(ctr - yHat, 2)
-                val newrmseBaseLine = rmseBaseLine + pow(ctr - baseLine, 2)
+                // Calculate the root mean square errors
+                val newrmse = rmse + pow(ctr - yHat, 2) 
+                val newrmseBaseLine = rmseBaseLine + pow(ctr - baseLine, 2) // Check answer for baseline rmse
+                // Hopefully will be the same, otherwise off by one errors etc
 
+                // Move onto the next line
                 predictCTRRecursive(test, labels, weights, baseLine, n + 1, newrmse, newrmseBaseLine)
             }
         }
@@ -90,36 +107,49 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
             avgLoss: Double,
             avgLossList: List[Double],
             n: Int): (SparseVector[Double], List[Double]) = {
-            if (!iter.hasNext) (weights, avgLossList)
+            if (!iter.hasNext) (weights, avgLossList.reverse)
             else {
                 // A line from the data set
+                // Make sure to exclude userid = 0 or age = 0 or gender = 0
                 val line = iter.next
+
                 // Create the feature vector
                 val x: SparseVector[Double] = featureVector(line)
+
                 // Update access times
                 val newAccessTimes: SparseVector[Int] =
                     calcAccessTimes(line, accessTimes, n)
+
                 // Perform the delayed regularization
                 val (delayRegWeights, delayAccessTimes) = 
                     performDelayedReg(newAccessTimes, x, weights, n)
+
                 // The actual label, clicked or not clicked
+                // 0 or 1 variable
                 val y: Int = line.clicked
+
                 // The predicted label P(Y=1|X)
+                // this is a double, not binary
                 val yHat: Double = predictLabel(x, delayRegWeights)
+
                 // Calculate the average loss, the square diff between
                 // actual and predicted labels
                 val avgLossNew: Double = avgLossFunc(avgLoss, y, yHat, n)
+
                 // A list of every 100th average loss value
                 val avgLossListNew: List[Double] = 
                     updateAvgLossList(avgLossNew, avgLossList, n)
-                // Calculate the new weights using SGD
-                val newWeights: SparseVector[Double] = 
-                    updateWeights(y, yHat, x, delayRegWeights, eta)
+
                 // Perform the standard regularization
                 val (stdRegWeights, stdAccessTimes) = 
-                    performStandardReg(delayAccessTimes, x, newWeights, n)
+                    performStandardReg(delayAccessTimes, x, delayRegWeights, n)
+
+                // Calculate the new weights using SGD
+                val newWeights: SparseVector[Double] = 
+                    updateWeights(y, yHat, x, stdRegWeights, eta)
+
                 // Move onto the next line to update the weights
-                recursiveSGD(iter, stdRegWeights, stdAccessTimes, avgLossNew, avgLossListNew, n + 1)
+                recursiveSGD(iter, newWeights, stdAccessTimes, avgLossNew, avgLossListNew, n + 1)
             }
         }
         recursiveSGD(data.dataIterator, w, aTimes, avgLoss, avgLossList, 1)
@@ -163,8 +193,8 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
             w: SparseVector[Double],
             n: Int): (SparseVector[Double], SparseVector[Int]) = {
         val coeff = 1 - (eta * lambda)
-        // val xIter = x.activeKeysIterator // Iterator over the current features
-        // if (xIter.hasNext) xIter.next // Skip w0
+        val xIter = x.activeKeysIterator // Iterator over the current features
+        if (xIter.hasNext) xIter.next // Skip w0
         // for (i <- xIter) {
         //     val t1 = accessTimes(i)
         //     if (t1 == n - 1) {
@@ -172,9 +202,13 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
         //         accessTimes(i) = n
         //     }
         // }
-        val temp = w(0)
-        w *= coeff
-        w(0) = temp
+        for (i <- xIter) {
+            w.update(i, w(i) * coeff)
+            accessTimes(i) = n
+        }
+        // val temp = w(0)
+        // w *= coeff
+        // w(0) = temp
         (w, accessTimes)
     }
 
@@ -183,6 +217,7 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
             x: SparseVector[Double],
             w: SparseVector[Double],
             eta: Double): SparseVector[Double] = {
+        // Check the order of regularization and gradient 
         val grad: Double = (y - yHat) * eta
         x *= grad
         w += x
@@ -199,6 +234,8 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
     // Return the average loss
     def avgLossFunc(avgLossPrev: Double, y: Double, 
             pyx: Double, n:Int): Double = {
+        // Turn click probability into clicked or not clicked
+        // Ask if this is true.
     	val yHat = {
     		if (pyx >= 0.5) 1
     		else 0
@@ -216,21 +253,6 @@ class LogisticRegression(data: DataSet, eta: Double, lambda: Double) {
         }
         else avgLossList
     }
-
 }
 
 
-    // // Update the weight vector 
-    // def updateWeightsHashMap(y: Double, yHat: Double,
-    //         line: DataLine,
-    //         w: mutable.HashMap[Int, Double],
-    //         eta: Double): mutable.HashMap[Int, Double] = {
-    //     val coeff: Double = (y - yHat) * eta
-    //     val (features, index) = line.featuresArray
-
-    //     val fzip = index zip features
-    //     val map = mutable.HashMap.empty[Int, Double]
-
-    //     for (p <- fzip) map += p
-    //     map
-    // }
